@@ -207,9 +207,13 @@ class DartResourceMethod {
     if (requestParameter != null) {
       var parameterEncode =
           requestParameter.type.jsonEncode('${requestParameter.name}');
+      if (enableDataWrapper) {
+        parameterEncode = "{'data': $parameterEncode}";
+      }
+      var encodedBody =
+          '${imports.convert.ref()}json.encode(${parameterEncode})';
       params.writeln('    if (${requestParameter.name} != null) {');
-      params.writeln(
-          '      _body = ${imports.convert.ref()}json.encode(${parameterEncode});');
+      params.writeln('      _body = $encodedBody;');
       params.writeln('    }');
     }
 
